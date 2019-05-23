@@ -46,6 +46,12 @@ class Broker
     protected $cookie_lifetime;
 
     /**
+     * Whether to accept all ssl certs, ignoring any issues
+     * @var boolean
+     */
+    protected $accept_all_ssl_certs = false;
+    
+    /**
      * Class constructor
      *
      * @param string $url    Url of SSO server
@@ -92,6 +98,15 @@ class Broker
         return "SSO-{$this->broker}-{$this->token}-$checksum";
     }
 
+    /**
+     * Set whether to ignore any SSL errors
+     *
+     * @param boolean $value
+     */
+    public function setIgnoreSSLErrors( $value ) {
+        $this->accept_all_ssl_certs = $value;
+    }
+    
     /**
      * Generate session token
      */
@@ -196,6 +211,10 @@ class Broker
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json', 'Authorization: Bearer '. $this->getSessionID()]);
+        if ( $this->accept_all_ssl_certs ) {
+	        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
 
         if ($method === 'POST' && !empty($data)) {
             $post = is_string($data) ? $data : http_build_query($data);
