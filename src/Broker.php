@@ -128,6 +128,18 @@ class Broker
     }
 
     /**
+     * Extends the cookie's life
+     */
+    public function extendToken( $lifetime = 3600 )
+    {
+        // If the token hasn't been set
+	if (!isset($this->token)) return;
+
+	// Recreate the cookie with the extended lifetime
+	setcookie($this->getCookieName(), $this->token, time() + $lifetime, '/');
+    }
+	
+    /**
      * Check if we have an SSO token.
      *
      * @return boolean
