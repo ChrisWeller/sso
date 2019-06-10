@@ -269,12 +269,13 @@ class Broker
      * @return array  user info
      * @throws Exception if login fails eg due to incorrect credentials
      */
-    public function login($username = null, $password = null)
+    public function login($username = null, $password = null, $two_fa_code = null )
     {
         if (!isset($username) && isset($_POST['username'])) $username = $_POST['username'];
         if (!isset($password) && isset($_POST['password'])) $password = $_POST['password'];
+        if (!isset($two_fa_code) && isset($_POST['two_fa_code'])) $two_fa_code = $_POST['two_fa_code'];
 
-        $result = $this->request('POST', 'login', compact('username', 'password'));
+        $result = $this->request('POST', 'login', compact('username', 'password', 'two_fa_code'));
         $this->userinfo = $result;
 
         return $this->userinfo;
