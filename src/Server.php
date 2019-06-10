@@ -270,7 +270,7 @@ abstract class Server
         if (empty($_POST['username'])) $this->fail("No username specified", 400);
         if (empty($_POST['password'])) $this->fail("No password specified", 400);
 
-        $validation = $this->authenticate($_POST['username'], $_POST['password']);
+        $validation = $this->authenticate($_POST['username'], $_POST['password'], $_POST['two_fa_code']);
 
         if ($validation->failed()) {
             return $this->fail($validation->getError(), 400);
@@ -380,9 +380,10 @@ abstract class Server
      *
      * @param string $username
      * @param string $password
+     * @param string $two_fa_code
      * @return \Jasny\ValidationResult
      */
-    abstract protected function authenticate($username, $password);
+    abstract protected function authenticate($username, $password, $two_fa_code = null);
 
     /**
      * Get the secret key and other info of a broker
