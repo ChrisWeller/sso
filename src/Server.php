@@ -269,8 +269,9 @@ abstract class Server
 
         if (empty($_POST['username'])) $this->fail("No username specified", 400);
         if (empty($_POST['password'])) $this->fail("No password specified", 400);
+        $two_fa_code = empty($_POST['password']) ? null : $_POST['password'];
 
-        $validation = $this->authenticate($_POST['username'], $_POST['password'], $_POST['two_fa_code']);
+        $validation = $this->authenticate($_POST['username'], $_POST['password'], $two_fa_code);
 
         if ($validation->failed()) {
             return $this->fail($validation->getError(), 400);
